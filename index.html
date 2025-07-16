@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/styles.css">
+    <title>Promo</title>
+</head>
+
+<body>
+    <header>
+        <h1>Ecole presque Ri7</h1>
+    </header>
+
+    <main>
+        <section id="container">
+            <h1>Liste des Promos</h1>
+            <div id="modalBtn">
+                <button id="addBtn" class="addBtnclose">Ajouter</button>
+            </div>
+            <section id="promos"></section>
+
+
+            <section id="addPromo">
+                <div id="modalPromo" class="modal hidden">
+                    <span class="closeBtn">&times;fermer </span>
+                    <h2 id="titleModal">Promo à ajouter</h2>
+                    <form>
+                        <div>
+                            <label for="name">Nom de la promo</label>
+                            <input type="text" id="name">
+                        </div>
+                        <div>
+                            <label for="startDate">Début de la formation</label>
+                            <input type="date" placeholder="jj/mm/aaaa" id="startDate">
+                        </div>
+                        <div>
+                            <label for="endDate">Fin de la formation</label>
+                            <input type="date" placeholder="jj/mm/aaaa" id="endDate">
+                        </div>
+                        <div>
+                            <label for="description">Type de promo</label>
+                            <textarea id="description"></textarea>
+                        </div>
+                        <input id="idpromo" type="hidden">
+                        <button type="button" id="btnAddProm">Envoyer</button>
+                    </form>
+                </div>
+
+            </section>
+        </section>
+
+    </main>
+    <footer>
+        <h1>Nos promos sont tout bos</h1>
+    </footer>
+
+    <script src="./assets/js/modal.js"></script>
+    <script src="./assets/js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/styles.css">
+
+    <title>Détails</title>
+</head>
+
+<body>
+
+    <body>
+        <header>
+            <h1 id="namePromo"></h1>
+            <li><a href="./index.html">Accueil</a></li>
+
+        </header>
+        <main id="mainStudents">
+            <h1>Liste des étudiants</h1>
+            <div id="modalBtn">
+                <button id="addBtn" class="addBtnclose">Ajouter</button>
+            </div>
+            <section id="students"></section>
+            <section id="addPromo">
+                <div id="modalPromo" class="modal hidden">
+                    <span class="closeBtn">&times;fermer </span>
+                    <h2 id="titleModal">Etudiant à ajouter ou modifier</h2>
+                    <form id="Form" enctype="multipart/form-data">
+                        <div>
+                            <label for="changeNom">Nom de l'étudiant</label>
+                            <input type="text" id="name">
+                        </div>
+                        <div>
+                            <label for="changePrenom">Prénom de l'étudiant</label>
+                            <input type="text" id="lastname">
+                        </div>
+                        <div>
+                            <label for="changeAge">Age de l'étudiant</label>
+                            <input type="text" id="age">
+                        </div>
+                        <div>
+                            <label for="avatar">Photo de profil:</label>
+                            <input type="file" id="avatar" name="avatar">
+                        </div>
+                        <button type="button" id="btnAddStudent">Envoyer</button>
+
+                    </form>
+                </div>
+
+            </section>
+        </main>
+
+
+        <footer>
+            <h1>Nos promos sont tout bos</h1>
+        </footer>
+        <script src="./assets/js/modal.js"></script>
+        <script src="./assets/js/student.js"></script>
+
+
+
+    </body>
+
+</html>
