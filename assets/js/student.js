@@ -44,46 +44,46 @@ async function parcourirStudents() {
 async function displayStudent(student) {
 
     const article = document.createElement('article')
+    article.classList.add('student-card')
+
     const firstName = document.createElement('p')
     const lastName = document.createElement('p')
     const age = document.createElement('p')
-    const id = document.createElement('p')
-    const avatar = document.createElement('img')
+    const idDisplay = document.createElement('p')
+
     const changeBtn = document.createElement('button')
     const supprBtn = document.createElement('button')
-    const img = await retrieveAvatar()
+
+
+    const img = await retrieveAvatar(promoId, student._id)
     article.appendChild(img)
+
 
 
     firstName.textContent = "Nom : " + student.firstName
     lastName.textContent = "Prénom : " + student.lastName
     age.textContent = "Age : " + student.age
-    id.textContent = "id :" + student._id
+    idDisplay.textContent = "ID : " + student._id
 
-    supprBtn.textContent = "supprimer"
-    supprBtn.classList.add("delete")
-    changeBtn.classList.add("modifyStudent")
+    supprBtn.textContent = "Supprimer"
+    supprBtn.classList.add("delete-btn")
+    changeBtn.classList.add("modify-btn")
     changeBtn.textContent = "Modifier"
 
-
-
-    firstName.appendChild(changeBtn)
-    firstName.appendChild(supprBtn)
-
-    const idStudent = localStorage.getItem(id)
-
     const btnContainer = document.createElement('div')
+    btnContainer.classList.add('student-actions')
     btnContainer.appendChild(changeBtn)
     btnContainer.appendChild(supprBtn)
 
     article.appendChild(firstName)
     article.appendChild(lastName)
     article.appendChild(age)
-    article.appendChild(id)
+    article.appendChild(idDisplay)
     article.appendChild(btnContainer)
 
-
     studentSection.appendChild(article)
+
+
 
     supprBtn.addEventListener("click", () => {
         deletedStudent(student._id)
@@ -92,18 +92,17 @@ async function displayStudent(student) {
         dataDelete.remove()
     })
 
-
-    changeBtn.addEventListener("click", (e) => {
-
+    changeBtn.addEventListener("click", () => {
         openAddModal()
-
+        updateMode = true
         currentStudent = student._id
+
         document.querySelector('#name').value = student.firstName
         document.querySelector('#lastname').value = student.lastName
         document.querySelector('#age').value = student.age
+        document.querySelector('#titleModal').textContent = "Modifier ou créer un étudiant"
 
-        updateMode = true
-
+        document.querySelector("#avatar").value = ''
     })
 }
 
@@ -121,28 +120,42 @@ addNewStudent.addEventListener("click", async (e) => {
 })
 
 async function addStudent() {
+
+    const nameInput = document.querySelector('#name').value
+    const lastNameInput = document.querySelector('#lastname').value
+    const ageInput = document.querySelector('#age').value
+    const avatarFileInput = document.querySelector("#avatar")
+    const avatarFile = avatarFileInput ? avatarFileInput.files[0] : null
+
+    const formData = new FormData()
+    formData.append('firstName', nameInput)
+    formData.append('lastName', lastNameInput)
+    formData.append('age', ageInput)
+
     const postStudent = {
         firstName: document.querySelector('#name').value,
         lastName: document.querySelector('#lastname').value,
         age: document.querySelector('#age').value
     }
+
     const add = await fetch(`http://146.59.242.125:3015/promos/${promoId}/students`, {
         method: "POST",
         headers: {
             Authorization: "Bearer 97c8048f-66ba-4fe8-b0d2-ebdc91e97e34",
             "Content-type": "Application/json"
         },
-        body: JSON.stringify(postStudent)
+        body: formData
     })
     const data = await add.json()
     console.log(data);
     closeModal()
     parcourirStudents()
     return data
+
 }
 
 
-async function updateStudent(currentStudent) {
+async function updateStudent(studentIdToUpdate) {
 
     const updateData = {
         firstName: document.querySelector('#name').value,
@@ -162,33 +175,14 @@ async function updateStudent(currentStudent) {
     const data = await reponse.json()
     console.log(data);
     parcourirStudents()
+    updateMode = true
     return data
-    /*
-        const studentID = currentStudent.value
-        const avatarImg = document.querySelector("#avatar").files[0]
-        const formData = new FormData()
-        formData.append('fisrtName', document.querySelector("#name").value)
-        formData.append('lastName', document.querySelector("#lastname").value)
-        formData.append('age', document.querySelector("#age").value)
-        if (avatarImg) {
-            formData.append('avatar', document.querySelector("#avatar").files[0])
-        }
-        const reponse = await fetch(`http://146.59.242.125:3015/promos/${promoId}/students/` + currentStudent, {
-            method: "PUT",
-            headers: {
-                Authorization: "Bearer 97c8048f-66ba-4fe8-b0d2-ebdc91e97e34",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(formData)
-        })
-    
-        const data = await reponse.json()
-        console.log(data);
-        parcourirStudents()
-        return data*/
+
+
 }
 
 async function deletedStudent(studentId) {
+
     const deleted = await fetch(`http://146.59.242.125:3015/promos/${promoId}/students/${studentId}`, {
         method: "DELETE",
         headers: {
@@ -199,30 +193,30 @@ async function deletedStudent(studentId) {
     location.reload()
 
     return dataDelete
+
+
 }
-
-
-
 
 async function retrieveAvatar(promoId, studentId) {
 
-    const avatar = await fetch('http://146.59.242.125:3015/promos/' + promoId + '/students/' + studentId + '/avatar', {
+
+    const response = await fetch(`http://146.59.242.125:3015/promos/${promoId}/students/${studentId}/avatar`, {
         method: "GET",
         headers: {
             Authorization: "Bearer 97c8048f-66ba-4fe8-b0d2-ebdc91e97e34"
         }
-    })
-    const avatarData = await avatar.blob()
+    });
+
+    const avatarData = await response.blob()
     const avatarUrl = URL.createObjectURL(avatarData)
     const img = document.createElement('img')
     img.src = avatarUrl
-    img.alt = "avatar"
+    img.alt = `Avatar de ${studentId}`
     img.width = 100
-
     return img
 
-
 }
+
 
 retrieveAvatar()
 parcourirStudents()
