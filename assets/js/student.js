@@ -53,7 +53,8 @@ async function displayStudent(student) {
 
     const changeBtn = document.createElement('button')
     const supprBtn = document.createElement('button')
-
+    changeBtn.type = "button"
+    supprBtn.type = "button"
 
     const img = await retrieveAvatar(promoId, student._id)
     article.appendChild(img)
@@ -88,7 +89,7 @@ async function displayStudent(student) {
         deletedStudent(student._id)
         closeModal()
 
-        dataDelete.remove()
+        article.remove()
     })
 
     changeBtn.addEventListener("click", () => {
@@ -143,15 +144,13 @@ async function addStudent() {
         method: "POST",
         headers: {
             Authorization: "Bearer 97c8048f-66ba-4fe8-b0d2-ebdc91e97e34",
-            "Content-type": "Application/json"
         },
         body: formData
     })
     const data = await add.json()
     console.log(data);
     closeModal()
-    parcourirStudents()
-    return data
+    displayStudent(data.data)
 
 }
 
@@ -163,29 +162,23 @@ async function updateStudent(currentStudent) {
     const lastNameInput = document.querySelector('#lastname').value
     const ageInput = document.querySelector('#age').value
     const avatarFileInput = document.querySelector("#avatar")
-    const avatarFile = avatarFileInput ? avatarFileInput.files[0] : null
 
     let formData = new FormData()
     formData.append('firstName', nameInput)
     formData.append('lastName', lastNameInput)
     formData.append('age', ageInput)
-    formData.append('avatar', avatarFileInput)
-
-    const updateData = {
-        firstName: document.querySelector('#name').value,
-        lastName: document.querySelector('#lastname').value,
-        age: document.querySelector('#age').value,
-        avatar: document.querySelector('#avatar').value,
-
+    if (avatarFileInput.files.length > 0) {
+        formData.append('avatar', avatarFileInput.files[0])
     }
+
+
 
     const reponse = await fetch(`http://146.59.242.125:3015/promos/${promoId}/students/` + currentStudent, {
         method: "PUT",
         headers: {
             Authorization: "Bearer 97c8048f-66ba-4fe8-b0d2-ebdc91e97e34",
-            "Content-Type": "application/json"
         },
-        body: JSON.stringify(updateData)
+        body: formData
     })
 
     const data = await reponse.json()
@@ -205,7 +198,6 @@ async function deletedStudent(studentId) {
         }
     })
     const dataDelete = await deleted.json()
-    location.reload()
 
     return dataDelete
 
