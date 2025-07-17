@@ -71,7 +71,6 @@ async function displayStudent(student) {
     changeBtn.textContent = "Modifier"
 
     const btnContainer = document.createElement('div')
-    btnContainer.classList.add('student-actions')
     btnContainer.appendChild(changeBtn)
     btnContainer.appendChild(supprBtn)
 
@@ -127,17 +126,19 @@ async function addStudent() {
     const avatarFileInput = document.querySelector("#avatar")
     const avatarFile = avatarFileInput ? avatarFileInput.files[0] : null
 
-    const formData = new FormData()
+    let formData = new FormData()
     formData.append('firstName', nameInput)
     formData.append('lastName', lastNameInput)
     formData.append('age', ageInput)
-
-    const postStudent = {
-        firstName: document.querySelector('#name').value,
-        lastName: document.querySelector('#lastname').value,
-        age: document.querySelector('#age').value
-    }
-
+    formData.append('avatar', avatarFile)
+    /*
+        const postStudent = {
+            firstName: document.querySelector('#name').value,
+            lastName: document.querySelector('#lastname').value,
+            age: document.querySelector('#age').value
+            avatar : document.querySelector('#avatar').value
+        }
+    */
     const add = await fetch(`http://146.59.242.125:3015/promos/${promoId}/students`, {
         method: "POST",
         headers: {
@@ -155,12 +156,27 @@ async function addStudent() {
 }
 
 
-async function updateStudent(studentIdToUpdate) {
+async function updateStudent(currentStudent) {
+    updateMode = true
+
+    const nameInput = document.querySelector('#name').value
+    const lastNameInput = document.querySelector('#lastname').value
+    const ageInput = document.querySelector('#age').value
+    const avatarFileInput = document.querySelector("#avatar")
+    const avatarFile = avatarFileInput ? avatarFileInput.files[0] : null
+
+    let formData = new FormData()
+    formData.append('firstName', nameInput)
+    formData.append('lastName', lastNameInput)
+    formData.append('age', ageInput)
+    formData.append('avatar', avatarFileInput)
 
     const updateData = {
         firstName: document.querySelector('#name').value,
         lastName: document.querySelector('#lastname').value,
         age: document.querySelector('#age').value,
+        avatar: document.querySelector('#avatar').value,
+
     }
 
     const reponse = await fetch(`http://146.59.242.125:3015/promos/${promoId}/students/` + currentStudent, {
@@ -175,7 +191,6 @@ async function updateStudent(studentIdToUpdate) {
     const data = await reponse.json()
     console.log(data);
     parcourirStudents()
-    updateMode = true
     return data
 
 
@@ -211,8 +226,9 @@ async function retrieveAvatar(promoId, studentId) {
     const avatarUrl = URL.createObjectURL(avatarData)
     const img = document.createElement('img')
     img.src = avatarUrl
-    img.alt = `Avatar de ${studentId}`
+    img.alt = `Avatar`
     img.width = 100
+
     return img
 
 }
